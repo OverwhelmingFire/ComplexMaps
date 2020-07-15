@@ -1,0 +1,1 @@
+g++ script.cpp function.cpp complex.cpp line.cpp curve.cpp ellipse.cpp text.cpp -lGL -lGLU -lGLEW -lglut -lm -o /home/master/Documents/ComplexMaps/script && /home/master/Documents/ComplexMaps/script $*

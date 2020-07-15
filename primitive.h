@@ -1,0 +1,30 @@
+#ifndef PRIMITIVE
+#define PRIMITIVE
+
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
+#include <vector>
+#include "complex.h"
+
+class primitive {
+    protected:
+        double r, g, b;
+        primitive() {}
+        std::vector<complex> vertices;
+        complex origin;
+    public:
+        std::vector<complex> const getVertices () {
+            return vertices;
+        }
+        virtual ~primitive() {}
+
+        virtual void resize(double d) {}
+        virtual void resize(complex const& _end) {}
+        virtual void draw() {}
+        virtual void out() {}
+};
+
+#endif
