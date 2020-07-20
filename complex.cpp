@@ -49,6 +49,7 @@ complex::complex(double x, double y, double _r, double _g, double _b) {
 }
 
 complex::complex(std::string s) {
+    std::cout << "HEYY " << s << std::endl;
     bool hasimaginary = false;
     int signcounter = 0;
     int lastsign = 0;

@@ -13,17 +13,19 @@ class primitive {
     protected:
         double r, g, b;
         primitive() {}
-        std::vector<complex> vertices;
         complex origin;
     public:
-        std::vector<complex> const getVertices () {
+        std::vector<complex> const getVertices () const {
             return vertices;
         }
         virtual ~primitive() {}
+        std::vector<complex> vertices;
 
         virtual void resize(double d) {}
         virtual void resize(complex const& _end) {}
-        virtual void draw() {}
+        virtual void draw() {
+            std::cout << "NO !" << std::endl;
+        }
         virtual void out() {}
 };
 

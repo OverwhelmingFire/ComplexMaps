@@ -157,7 +157,7 @@ textEditOnCanvas: it is a text box used to edit text
 */
 
 text textOnCanvas(wMenuCanvas,hMenuCanvas/2,xMenuCanvas,yMenuCanvas,"Please enter your function below:");
-text textEditOnCanvas(wMenuCanvas,hMenuCanvas/2,xMenuCanvas,yMenuCanvas+hMenuCanvas/2,"2+i*z");
+text textEditOnCanvas(wMenuCanvas,hMenuCanvas/2,xMenuCanvas,yMenuCanvas+hMenuCanvas/2,"");
 
 /*
 
@@ -212,8 +212,11 @@ function * parser(std::string s) {
     int lastOperatorPos = -1;
     int lOpenCounter = 0;
     int lPos = -1;
+    function * ret = nullptr;
     try {
+    std::cout << 111 << std::endl;
     for (int i = 0; i < s.length(); i++) {
+        std::cout << 112 << std::endl;
         int value = priority[s[i]];
         if (value) {
             if (!lOpenCounter) {
@@ -237,8 +240,10 @@ function * parser(std::string s) {
             lOpenCounter--;
             if (lOpenCounter<0) throw "Syntax error: excess closing bracket";
         }
+        std::cout << 113 << std::endl;
     }
 
+    std::cout << 114 << std::endl;
     if (!lOpenCounter) {
         if (lastOperatorPos+1 != lPos) {
             isfunction.push_back(lPos-lastOperatorPos-1);
@@ -251,18 +256,19 @@ function * parser(std::string s) {
     }
     //else throw "Syntax error: no closing bracket found";
 
-    }
-    catch (const char * e) {
-        std::cerr<<e<<std::endl;
-    }
+    std::cout << 115 << std::endl;
 
+    std::cout << 116 << std::endl;
     std::vector<function*> foos(operands.size(), nullptr);
     for (int i = 0; i < operands.size(); i++) {
+        std::cout << operands[i] << std::endl;
         function * f;
         if (isargument(operands[i])) {
+            std::cout << 116.1 << std::endl;
             f = new function();
         }
         else if (iscomplex(operands[i])) {
+            std::cout << 116.2 << std::endl;
             if (operands[i].length()==1 && operands[i][0]!='i' && !std::isdigit(operands[i][0])) {
                 throw "Unknown operand";
             }
@@ -270,23 +276,31 @@ function * parser(std::string s) {
             f = new function(constant);
         }
         else if (isfunction[i]) {
+            std::cout << 116.3 << std::endl;
             if (operands[i].length()==1 && !std::isdigit(operands[i][0])) {
                 throw "Unknown operand";
             }
+            std::cout << 116.4 << " " << isfunction[i] << " " << operands[i].length()-isfunction[i] << std::endl;
             std::string subst = operands[i].substr(isfunction[i], operands[i].length()-isfunction[i]);
+            std::cout << 116.41 << subst << std::endl;
             function * arg = parser(subst);
             std::string subst2 = operands[i].substr(0,isfunction[i]);
+            std::cout << 116.5 << std::endl;
             f = new function(equals[subst2], arg);
+            std::cout << 116.6 << std::endl;
         }
         else {
+            std::cout << 116.4 << std::endl;
             f = parser(operands[i]);
         }
 
         foos[i] = f;
     }
+    std::cout << 117 << std::endl;
 
     int i = 0;
     while (operators.size() > 0) {
+        std::cout << 118 << std::endl;
         bool greaterThanLeft = false;
         bool greaterThanRight = false;
         if ((i>0 && priority[operators[i]]>=priority[operators[i-1]]) || (i == 0)) greaterThanLeft = true;
@@ -302,7 +316,16 @@ function * parser(std::string s) {
         if (i>=operators.size()) i = 0;
     }
     foos[0]->out("");
-    return foos[0];
+    ret = foos[0];
+    }
+    catch (const char * e) {
+        std::cerr<<e<<std::endl;
+        return nullptr;
+    }
+    catch (const std::out_of_range & e) {
+        return nullptr;
+    }
+    return ret;
 }
 
 /*
@@ -607,8 +630,98 @@ void mouse(int button, int state, int x, int y)
     }
 }
 
+void init() {
+    hlines.clear();
+    vlines.clear();
+    haxe.clear();
+    vaxe.clear();
+    hlinesMap.clear();
+    vlinesMap.clear();
+    haxeMap.clear();
+    vaxeMap.clear();
+    /*
+        The code below fills with contents the following variables:
+
+        hlines
+        vlines
+        haxe
+        vaxe
+        haxeMap
+        vaxeMap
+
+        Amount of points in every line of the graph depends on the RESOLUTION
+    */
+
+    for (int r = 0; r <= RESOLUTION; r++) {
+        std::vector<complex> temph;
+        std::vector<complex> tempv;
+        for (int c = 0; c <= RESOLUTION; c++) {
+            temph.push_back(complex(((double)r/(double)RESOLUTION-0.5)*2, ((double)c/(double)RESOLUTION-0.5)*2));
+        }
+        for (int c = 0; c <= RESOLUTION; c++) {
+            tempv.push_back(complex(((double)c/(double)RESOLUTION-0.5)*2, ((double)r/(double)RESOLUTION-0.5)*2));
+        }
+        hlines.push_back(temph);
+        vlines.push_back(tempv);
+
+        haxe.push_back(complex(((double)r/(double)RESOLUTION-0.5)*2, 0, 1-(double)r/(double)RESOLUTION, (double)r/(double)RESOLUTION, 0));
+        vaxe.push_back(complex(0, ((double)r/(double)RESOLUTION-0.5)*2, (double)r/(double)RESOLUTION-0.2, (double)r/(double)RESOLUTION-0.2, 1-(double)r/(double)RESOLUTION));
+
+        haxeMap.push_back(func(haxe[haxe.size()-1]));
+        vaxeMap.push_back(func(vaxe[vaxe.size()-1]));
+    }
+
+    /*
+        hlinesMap
+        vlinesMap
+    */
+
+    for (int i = 0; i < hlines.size(); i++) {
+        std::vector<complex> temp;
+        for (int k = 0; k < hlines[i].size(); k++) {
+            temp.push_back(func(hlines[i][k]));
+        }
+        hlinesMap.push_back(temp);
+    }
+
+    for (int i = 0; i < vlines.size(); i++) {
+        std::vector<complex> temp;
+        for (int k = 0; k < vlines[i].size(); k++) {
+            temp.push_back(func(vlines[i][k]));
+        }
+        vlinesMap.push_back(temp);
+    }
+
+    /*
+
+    Re-filling the vector with mapped curves
+
+    */
+
+    image.clear();
+    for (int i = 0; i < preimage.size(); i++) {
+        curve * tc = new curve();
+        (*tc) = (*f)(*(preimage[i]));
+        image.push_back(tc);
+    }
+}
+
 void keyboard(unsigned char key, int x, int y) {
-    textEditOnCanvas.keyboard(key);
+    if (textEditOnCanvas.issetcursor()) {
+        textEditOnCanvas.keyboard(key);
+        function * tf = nullptr;
+        try {
+            tf = parser(textEditOnCanvas.gettext());
+        }
+        catch (const std::exception& ex) {
+            std::cout << "KEK" << std::endl;
+        }
+        if (tf == nullptr) std::cout << "No function has been generated." << std::endl;
+        else {
+            f = tf;
+            init();
+        }
+    }
     if (glutGetModifiers() == GLUT_ACTIVE_SHIFT) {
         shift = true;
     }
@@ -716,63 +829,7 @@ void specialUp(int key, int x, int y) {
         }
 }
 
-void init() {
 
-    /*
-        The code below fills with contents the following variables:
-
-        hlines
-        vlines
-        haxe
-        vaxe
-        haxeMap
-        vaxeMap
-
-        Amount of points in every line of the graph depends on the RESOLUTION
-    */
-
-    for (int r = 0; r <= RESOLUTION; r++) {
-        std::vector<complex> temph;
-        std::vector<complex> tempv;
-        for (int c = 0; c <= RESOLUTION; c++) {
-            temph.push_back(complex(((double)r/(double)RESOLUTION-0.5)*2, ((double)c/(double)RESOLUTION-0.5)*2));
-        }
-        for (int c = 0; c <= RESOLUTION; c++) {
-            tempv.push_back(complex(((double)c/(double)RESOLUTION-0.5)*2, ((double)r/(double)RESOLUTION-0.5)*2));
-        }
-        hlines.push_back(temph);
-        vlines.push_back(tempv);
-
-        haxe.push_back(complex(((double)r/(double)RESOLUTION-0.5)*2, 0, 1-(double)r/(double)RESOLUTION, (double)r/(double)RESOLUTION, 0));
-        vaxe.push_back(complex(0, ((double)r/(double)RESOLUTION-0.5)*2, (double)r/(double)RESOLUTION-0.2, (double)r/(double)RESOLUTION-0.2, 1-(double)r/(double)RESOLUTION));
-
-        haxeMap.push_back(func(haxe[haxe.size()-1]));
-        vaxeMap.push_back(func(vaxe[vaxe.size()-1]));
-    }
-
-    /*
-        hlinesMap
-        vlinesMap
-    */
-
-    for (int i = 0; i < hlines.size(); i++) {
-        std::vector<complex> temp;
-        for (int k = 0; k < hlines[i].size(); k++) {
-            temp.push_back(func(hlines[i][k]));
-        }
-        hlinesMap.push_back(temp);
-    }
-
-    for (int i = 0; i < vlines.size(); i++) {
-        std::vector<complex> temp;
-        for (int k = 0; k < vlines[i].size(); k++) {
-            temp.push_back(func(vlines[i][k]));
-        }
-        vlinesMap.push_back(temp);
-    }
-
-
-}
 
 int main(int argc, char **argv)
 {

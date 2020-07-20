@@ -2,6 +2,7 @@
 #define FUNCTION
 
 #include "complex.h"
+#include "curve.h"
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
@@ -28,6 +29,10 @@ class function {
         void out(std::string tab);
 
         complex calc(complex const& z);
+
+        curve operator()(primitive const& p);
+
+        complex operator()(complex const& c);
 };
 
 #endif

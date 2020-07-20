@@ -113,7 +113,7 @@ void text::draw() {
     glColor3f(0.0,0.0,0.0);
     for (int i = 0; i < stringsBuf.size(); i++) {
         renderString(-1.0f, 1.0f-stringHeight*(i+1), reinterpret_cast<const unsigned char *>(stringsBuf[i].c_str()));
-        if (cursor != -1 &&  i == row) {
+        if (cursor != -2 &&  i == row) {
             if (counter > 0) {
                 glBegin(GL_LINE_STRIP);
                 glColor3f(0,0,0);
@@ -153,8 +153,8 @@ void text::out() {
 int text::inside(int _x, int _y) {
 std::cout << "y " << y << " _y " << _y << std::endl;
     if (_x < x || _y < y || _x > x+w || _y > y+h) {
-        cursor = -1;
-        return -1;
+        cursor = -2;
+        return -2;
     }
     row = (_y-y)/glutBitmapHeight(font);
     if (row > stringsBuf.size()-1) {
@@ -171,24 +171,32 @@ std::cout << "y " << y << " _y " << _y << std::endl;
         }
     }
     if (column == -1) {
-        column = stringsBuf[row].length();
+        column = stringsBuf[row].length()-1;
     }
     int c = 0;
     for (int i = 0; i < row; i++) { // @todo: remove c, replace with cursor
         c+=stringsBuf[i].length();
     }
-    c+=stringsBuf[row].substr(0,column).length();
+    c+=column;
     cursor=c;
     return row;
 }
 
+std::string const text::gettext() {
+    return s;
+}
+
+bool const text::issetcursor() {
+    return (cursor == -2 ? false : true);
+}
+
 void text::keyboard(char _c) {
-    if (cursor == -1) return;
     if (_c == 8) {
         if (s.length() > 0) {
             std::cout << s.substr(0,cursor) << "!!!!!!!!!! " << cursor << std::endl;
             s = s.substr(0,cursor) + (cursor < s.length()-1 ? s.substr(cursor+1,s.length()-cursor-1) : "");
-            if (cursor > 0) cursor--;
+            if (cursor > -1) cursor--;
+            std::cout << "Got " << cursor << std::endl;
             generateWords();
             generateStringsBuf();
             reposCarrier();
@@ -203,6 +211,7 @@ void text::keyboard(char _c) {
             s = _c;
         }
         cursor++;
+        std::cout << "Got " << cursor << std::endl;
         generateWords();
         generateStringsBuf();
         reposCarrier();

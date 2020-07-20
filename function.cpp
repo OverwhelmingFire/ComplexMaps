@@ -106,3 +106,62 @@ complex function::calc(complex const& z) {
          }
     }
 };
+
+
+curve function::operator()(primitive const& p) {
+    std::vector<complex> const _nvertices = p.getVertices();
+    curve r((*this)(_nvertices[0]));
+    for (int i = 1; i < _nvertices.size(); i++) {
+        r.resize((*this)(_nvertices[i]));
+    }
+
+    return r;
+}
+
+complex function::operator()(complex const& z) {
+    if (functionType == 2) {
+        return constant;
+    }
+    else if (functionType == 3) {
+        return z;
+    }
+    else {
+        switch (oper) {
+            case '+': {
+                return ((*operand1)(z))+((*operand2)(z));
+                break;
+            }
+            case '-': {
+                return ((*operand1)(z))-((*operand2)(z));
+                break;
+            }
+            case '*': {
+                return ((*operand1)(z))*((*operand2)(z));
+                break;
+            }
+            case '/': {
+                return ((*operand1)(z))/((*operand2)(z));
+                break;
+            }
+            case '^': {
+                return ((*operand1)(z))^((*operand2)(z));
+                break;
+            }
+            case 'l': {
+                return ((*operand1)(z)).ln();
+            }
+            case 'e': {
+                return ((*operand1)(z)).ex();
+            }
+            case 's': {
+                return ((*operand1)(z)).sn();
+            }
+            case 'c': {
+                return ((*operand1)(z)).cs();
+            }
+            default: {
+                break;
+            }
+         }
+    }
+}

@@ -10,7 +10,7 @@ class text : public primitive {
         static const int timing = 5;
         bool bound;
         double stringHeight;
-        int cursor = -1; // @todo: change cursor=>carrier
+        int cursor = -2; // @todo: change cursor=>carrier
         int counter = timing;
         int row;
         int column;
@@ -33,6 +33,8 @@ class text : public primitive {
         text(int const _w, int const _h, int _x, int _y, std::string _s);
         void setfont(void* _font);
         void* const getfont();
+        std::string const gettext();
+        bool const issetcursor();
         void setbound(bool t);
         bool const getbound();
         virtual void resize(int _w, int _h, int _x, int _y);
