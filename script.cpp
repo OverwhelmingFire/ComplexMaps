@@ -213,7 +213,6 @@ function * parser(std::string s) {
     int lOpenCounter = 0;
     int lPos = -1;
     function * ret = nullptr;
-    try {
     std::cout << 111 << std::endl;
     for (int i = 0; i < s.length(); i++) {
         std::cout << 112 << std::endl;
@@ -281,12 +280,13 @@ function * parser(std::string s) {
                 throw "Unknown operand";
             }
             std::cout << 116.4 << " " << isfunction[i] << " " << operands[i].length()-isfunction[i] << std::endl;
-            std::string subst = operands[i].substr(isfunction[i], operands[i].length()-isfunction[i]);
+            std::string subst = operands[i].substr(isfunction[i], operands[i].length()-isfunction[i]); // @todo: handle cases when isfunction[i] < 0
             std::cout << 116.41 << subst << std::endl;
+
             function * arg = parser(subst);
             std::string subst2 = operands[i].substr(0,isfunction[i]);
             std::cout << 116.5 << std::endl;
-            f = new function(equals[subst2], arg);
+            f = new function(equals[subst2], arg); // @todo: what if there is no match in the "equals"?
             std::cout << 116.6 << std::endl;
         }
         else {
@@ -298,6 +298,7 @@ function * parser(std::string s) {
     }
     std::cout << 117 << std::endl;
 
+    if (operands.size() == 0) throw "there are no operands";
     int i = 0;
     while (operators.size() > 0) {
         std::cout << 118 << std::endl;
@@ -315,16 +316,10 @@ function * parser(std::string s) {
         i++;
         if (i>=operators.size()) i = 0;
     }
+    std::cout << "117.1" << std::endl;
     foos[0]->out("");
     ret = foos[0];
-    }
-    catch (const char * e) {
-        std::cerr<<e<<std::endl;
-        return nullptr;
-    }
-    catch (const std::out_of_range & e) {
-        return nullptr;
-    }
+    std::cout << "117.2" << std::endl;
     return ret;
 }
 
@@ -713,8 +708,14 @@ void keyboard(unsigned char key, int x, int y) {
         try {
             tf = parser(textEditOnCanvas.gettext());
         }
-        catch (const std::exception& ex) {
-            std::cout << "KEK" << std::endl;
+        catch (const char * e) {
+            std::cout << "Error: " << e << std::endl;
+        }
+        catch (const std::out_of_range& e) {
+            //std::cout << "Error: " << e << std::endl;
+        }
+        catch (const std::invalid_argument& e) {
+            //std::cout << "Error: " << e << std::endl;
         }
         if (tf == nullptr) std::cout << "No function has been generated." << std::endl;
         else {
@@ -855,7 +856,18 @@ int main(int argc, char **argv)
     if (argc>1) {
         expression=argv[1];
     }
-    f = parser(expression);
+    try {
+        f = parser(expression);
+    }
+    catch (const char * e) {
+        std::cout << "Error: " << e << std::endl;
+    }
+    catch (const std::out_of_range& e) {
+        //std::cout << "Error: " << e << std::endl;
+    }
+    catch (const std::invalid_argument& e) {
+        //std::cout << "Error: " << e << std::endl;
+    }
     f->out("");
     init();
 
