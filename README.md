@@ -9,7 +9,21 @@ You can draw different kinds of shapes (curves, straight lines and ellipses by n
 * 1 stands for curves
 * 2 stands for straight lines
 * 3 stands for ellipses  
-To draw a shape, you should press the left mouse button anywhere on the screen, move the mouse around and release it. In the ellipse mode you can also regulate the width of an ellipse scrolling the mouse wheel.  
+To draw a shape, you should press the left mouse button anywhere on the screen, move the mouse around and release it. In the ellipse mode you can also regulate the width of an ellipse scrolling the mouse wheel.
+  
+**Curve mode:**  
+![Curve](https://user-images.githubusercontent.com/34778977/88216540-c43af380-cc4c-11ea-89a5-c6279089edc5.png)  
+**Line mode:**  
+![Line](https://user-images.githubusercontent.com/34778977/88217678-6d361e00-cc4e-11ea-843d-8b7e7df1a9ea.png)  
+**Ellipse mode:**  
+![Ellipse](https://user-images.githubusercontent.com/34778977/88217683-6e674b00-cc4e-11ea-8c3d-fffab3102c66.png)
+
+### Navigating around the plot
+You can **scroll** the mouse wheel and resize both preimage and image.  
+![Scrolling](https://user-images.githubusercontent.com/34778977/88219688-783e7d80-cc51-11ea-9483-80cbed0cadaa.png)  
+
+Moreover, you can press on the spacebar and, **moving** your mouse around, drag both preimage and image.
+![Moving](https://user-images.githubusercontent.com/34778977/88219708-7e345e80-cc51-11ea-9c38-8c4d03831433.png)  
 
 ### Setting a custom function
 You can enter a custom function in a text box on the right. All axises and your paintings will be re-mapped. However, the function must meet some syntax requirements:
@@ -19,6 +33,14 @@ You can enter a custom function in a text box on the right. All axises and your 
 4. Currently the following functions are supported:
     1. ```sin(), or s(); cos(), or c()```
     2. ```exp(), or e(); ln(), or log(), or l()```
+
+**Ln(x):**  
+![Ln(x)](https://user-images.githubusercontent.com/34778977/88218733-fdc12e00-cc4f-11ea-92be-a9c3d6bf3ec4.png)  
+**Sin(x):**  
+![Sin(x)](https://user-images.githubusercontent.com/34778977/88218760-0580d280-cc50-11ea-827c-7182345abafd.png)  
+**Sin(x)+1/x:**  
+![Sin(x)+1/x](https://user-images.githubusercontent.com/34778977/88218769-074a9600-cc50-11ea-9bf8-5d29d25c46c5.png)  
+
 
 ## 2. How can I launch this program?
 
