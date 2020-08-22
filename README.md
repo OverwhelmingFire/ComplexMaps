@@ -58,7 +58,14 @@ Download **script.exe** and run it as an ordinary executable file.
 Moreover, you can compile executable by yourself.
 
 #### - On Linux for Linux:
-
+  
+You have to install such libraries as **libgl1-mesa-dev, freeglut3-dev and libglew-dev**:  
+```$ sudo apt-get install libgl1-mesa-dev freeglut3-dev libglew-dev```  
+Then go to the directory of the downloaded repo and compile:  
+```g++ script.cpp function.cpp complex.cpp line.cpp curve.cpp ellipse.cpp text.cpp -lGL -lGLU -lGLEW -lglut -lm -o script```  
+Run the compiled output:  
+```./script```  
+  
 #### - On Linux for Windows:
 
 Firstly, Mingw-w64 will come in handy while compiling on Linux for Windows:  
@@ -71,8 +78,12 @@ Just scroll down for the **freeglut 3.0.0 MSVC Package**. There are two importan
 │   ├-- ...
 └ ...
 ```
-If you want to compile for x32 and x64, copy everything inside of **include** and everything **(but x64)** inside of **lib** to **/usr/i686-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:  
-```$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```  
-If you want to compile for x64, copy everything inside of **include** and everything inside of **lib/x64** to **/usr/x86_64-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:  
-```$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```  
+If you want to compile for x32 and x64, copy everything inside of **include** and everything **(but x64)** inside of **lib** to **/usr/i686-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:   
+
+```$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
+
+If you want to compile for x64, copy everything inside of **include** and everything inside of **lib/x64** to **/usr/x86_64-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:    
+
+```$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
+
 Executable file will be generated. Launching of the executables under different systems was described in the previous paragraph. 
