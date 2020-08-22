@@ -1,0 +1,89 @@
+16.03.20 Разобрался с тем, как компилировать программу с OpenGL на Linux для Windows х32. Для этого необходимо использовать MinGW:
+$ sudo apt-get install mingw-w64
+Необходимо устанавливать именно mingw-w64, поскольку:
+"MinGW is a GCC-port for Windows. Not all of the Windows API is supported (but for many programs the supported stuff is sufficient) and it´s only for 32bit-Programs (which often can run on 64bit-Windows too, but some can´t, and you can´t compile them as 64bit).
+MinGW-w64 is a improved version which supports both 32bit and 64bit, and some more of the WinAPI (still not all, because thats much work, but more than MinGW)." Кроме того, в официальных репозиториях дебиана mingw отсутствует.
+Далее необходимо скачать сборку freeglut под windows. Использование лишь только встроенных в mingw-w64 библиотек GL привело в моём случае к появлению ошибки:
+```/tmp/cc5pgHPa.o:script.cpp:(.text+0x1c): undefined reference to `_imp____glutInitWithExit@12'
+/tmp/cc5pgHPa.o:script.cpp:(.text+0x3f): undefined reference to `_imp____glutCreateWindowWithExit@8'
+/tmp/cc5pgHPa.o:script.cpp:(.text+0x61): undefined reference to `_imp____glutCreateMenuWithExit@8'
+collect2: error: ld returned 1 exit status```
+Выяснилось, что указанные функции glutInitWithExit ... glutCreateMenuWithExit реализованы именно в freeglut. Поэтому я скачал freeglut с сайта https://www.transmissionzero.co.uk/software/freeglut-devel/ из раздела "freeglut 3.0.0 MSVC Package". 
+На случай, если страницу отредактировали или удалили, прямая ссылка для скачивания: https://www.transmissionzero.co.uk/files/software/development/GLUT/freeglut-MinGW.zip
+Все файлы из папок архива include и lib необходимо закинуть в соответствующие (так же называющиеся) папки, находящиеся внутри /usr/i686-w64-mingw32/. Если компилируем под х64, то, подозеваю, необходимо вместо содержимого папки lib использовать lib/x64/, а целевая папка, в которую упомянутое содержимое надо перенести - /usr/x86_64-w64-mingw32/.
+
+В случае х32 компиляция выглядит следующим образом:
+$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++
+
+В случае x64 он выглядит несколько иначе:
+$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++
+
+Библиотеки статически "вшиваются" в .ехе-шник. В самом .срр-файле необходимо указать заголовки:
+#include <windows.h>
+#include <gl.h>
+#include <glu.h>
+#include <GL/freeglut.h>
+А также, поскольку freeglut статически вшиваем в .ехе-шник, добвляем следующую директиву препроцессора:
+#define FREEGLUT_STATIC
+
+22.06.20 Наконец взялся решать проблему "мерцания" отрисованной картинки на Windows. Она была с самого начала, но не доходили руки решить эту проблему. Оказалось, что цвет кисти надо задавать внутри блока glBegin();...glEnd(); .
+
+
+
+
+
+
+
+
+
+
+
+# ComplexMaps
+A small program to visualize complex functions
+
+This program is created in sake of better understanding how do complex functions transorm various shapes. 
+
+## 1. What can I do in this program?
+### Drawing
+You can draw different shapes (curves, straight lines and ellipses by now). A kind of shape is defined by the current mode. You can switch between the modes pressing 1,2 and 3 on the keyboard.  
+* 1 stands for curves
+* 2 stands for straight lines
+* 3 stands for ellipses  
+To draw a shape, you should press the left mouse button anywhere on the screen, move the mouse around and release it. In the ellipse mode you can also regulate the width of an ellipse scrolling the mouse wheel.  
+
+
+## 2. How can I launch this program?
+
+### Download pre-compiled executable files...
+First of all, there are pre-compiled executable files, which you can download and launch if you dare. 
+
+#### - Linux:
+Download **script** and run it from the command prompt (assuming that your current directory is the one containing the file):  
+```$ ./script```
+
+#### - Windows:
+Download **script.exe** and run it as an ordinary executable file.
+
+### ...or compile by your own.
+Moreover, you can compile executable by yourself.
+
+#### - On Linux for Linux:
+
+#### - On Linux for Windows:
+
+Firstly, Mingw-w64 will come in handy while compiling on Linux for Windows:  
+```$ sudo apt-get install mingw-w64```  
+Then, you should download freeglut for windows. Otherwise you will just run into a bunch of errors. You can find it [here](https://www.transmissionzero.co.uk/software/freeglut-devel/). 
+Just scroll down for the **freeglut 3.0.0 MSVC Package**. There are two important folders: **include** and **lib**.  
+```├-- include
+├-- lib
+│   ├-- x64
+│   ├-- ...
+└ ...
+```
+If you want to compile for x32 and x64, copy everything inside of **include** and everything **(but x64)** inside of **lib** to **/usr/i686-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:  
+```$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```  
+If you want to compile for x64, copy everything inside of **include** and everything inside of **lib/x64** to **/usr/x86_64-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:  
+```$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```  
+Executable file will be generated. Launching of the executables under different systems was described in the previous paragraph. 
+ 
