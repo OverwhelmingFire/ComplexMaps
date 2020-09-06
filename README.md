@@ -80,10 +80,10 @@ Just scroll down for the **freeglut 3.0.0 MSVC Package**. There are two importan
 ```
 If you want to compile for x32 and x64, copy everything inside of **include** and everything **(but x64)** inside of **lib** to **/usr/i686-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:   
 
-```$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
+```$ i686-w64-mingw32-g++ -m32 -Wall -I/usr/i686-w64-mingw32/include/GL -o script.exe script.cpp function.cpp complex.cpp curve.cpp text.cpp ellipse.cpp line.cpp -D FREEGLUT_STATIC -L/usr/i686-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
 
 If you want to compile for x64, copy everything inside of **include** and everything inside of **lib/x64** to **/usr/x86_64-w64-mingw32/**. Switch to the directory with downloaded repo and run the following command:    
 
-```$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
+```$ x86_64-w64-mingw32-g++ -m64 -Wall -I/usr/x86_64-w64-mingw32/include/GL -o script64.exe script.cpp function.cpp complex.cpp curve.cpp text.cpp ellipse.cpp line.cpp -D FREEGLUT_STATIC -L/usr/x86_64-w64-mingw32/lib  -lfreeglut_static -lopengl32 -lwinmm  -lgdi32 -Wl,--subsystem,windows -static-libgcc -static-libstdc++```   
 
 Executable file will be generated. Launching of the executables under different systems was described in the previous paragraph. 
